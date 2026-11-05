@@ -13,6 +13,7 @@ import AddPost from "../pages/AddPost";
 import PostForm from "./post-form/PostForm";
 import Postcard from "./Postcard";
 import AllPost from "../pages/AllPost";
+import Authlayout from '../components/Authlayout'
 
 
 export {
@@ -30,5 +31,6 @@ export {
   AddPost,
   PostForm,
   Postcard,
-  AllPost
+  AllPost,
+  Authlayout
 };
