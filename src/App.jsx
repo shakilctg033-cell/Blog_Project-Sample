@@ -4,6 +4,7 @@ import authservice from './appwrite/auth'
 import {login, logout} from "./store/authslice"
 import './index.css'
 import { Outlet } from 'react-router-dom'
+import { Footer, Header } from './components'
 
 function App() {
   const [loading, setLoading] = useState(true)
@@ -25,12 +26,12 @@ function App() {
   return !loading ? (
     <div className="text-3xl font-bold text-green-600 content-between flex flex-wrap ">Hello Tailwind
     <div>
-      <header/>
+      <Header/>
       <main>
         //outlet
         <Outlet/>
       </main>
-      <footer/>
+      <Footer/>
     </div>
     </div>
   ) : null
