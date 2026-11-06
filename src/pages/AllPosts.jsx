@@ -1,9 +1,9 @@
-import React,{useState,useEffect} from 'react'
+import React ,{useState,useEffect} from 'react'
 import { Container,Postcard } from '../components'
 import Service from "../appwrite/configaration"
-import { useState } from 'react'
 
-function AllPost() {
+
+function AllPosts() {
     const [posts, setPosts] = useState([])
     useEffect(() => {}, [])
     Service.getPosts([]).then((posts) => {
@@ -26,4 +26,4 @@ function AllPost() {
   )
 }
 
-export default AllPost
+export default AllPosts
