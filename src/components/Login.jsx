@@ -20,7 +20,7 @@ function Login() {
       if (session) {
         const userData = await authservice.getcurrentuser();
         if (userData) {
-          dispatch(authLogin(userData));
+          dispatch(authLogin({userData}));
           navigate("/");
         }
       }
@@ -53,33 +53,32 @@ function Login() {
         </p>
         {error && <p className="text-red-600 mt-8 text-center ">{error}</p>}
         <form onSubmit={handleSubmit(login)} className="mt-8">
-            <div className="space-y-5">
-                <Input
-                label="Email:"
-                placeholder="Enter your email"
-                type="email"
-                {...register("email",{
-                    required: true,
-                    validate:{
-                          matchPattern: (value) =>{
-                            /^\w+@[.-]?\w+([.-]?\w+)*(\.\w{2,3})+$/
-                            .test(value) ||
-                            "Email adress must be a valid adress"
-                        }
-                    }
-                })}
-                />
-                <Input 
-                label="Password"
-                placeholder="Enter your password"
-                type="password"
-                {...register("password",{
-                    required:true,
-                    
-                })}
-                />
-             <Button type="submit" className="w-full">Sign in</Button>
-            </div>
+          <div className="space-y-5">
+            <Input
+              label="Email:"
+              placeholder="Enter your email"
+              type="email"
+              {...register("email", {
+                required: true,
+                validate: {
+                  matchPattern: (value) =>
+                    /^[\w.+-]+@[\w-]+(\.[\w-]+)+$/.test(value) ||
+                    "Email address must be a valid address",
+                },
+              })}
+            />
+            <Input
+              label="Password"
+              placeholder="Enter your password"
+              type="password"
+              {...register("password", {
+                required: true,
+              })}
+            />
+            <Button type="submit" className="w-full">
+              Sign in
+            </Button>
+          </div>
         </form>
       </div>
     </div>
