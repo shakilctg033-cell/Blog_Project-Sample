@@ -15,7 +15,7 @@ export class Service {
 
     async createPost({title, slug, content, freaturedImg, status, userId}){
         try {
-            return await this.databases.createRow(
+            return await this.databases.createDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug,
@@ -35,7 +35,7 @@ export class Service {
 
     async updatePost(slug, {title, content, freaturedImg, status}){
         try {
-            return await this.databases.updateRow(
+            return await this.databases.updateDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug,
@@ -54,7 +54,7 @@ export class Service {
 
     async deletePost({slug}){
         try {
-            await this.databases.deleteRow(
+            await this.databases.deleteDocument(
             config.appwriteDatabaseId,
             config.appwriteCollectionId,
             slug
@@ -68,7 +68,7 @@ export class Service {
 
     async getPost({slug}){
         try {
-           return await this.databases.getRow(
+           return await this.databases.getDocument(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 slug
@@ -81,7 +81,7 @@ export class Service {
 
     async getPosts(queries = [Query.equal("status","active")]){
         try {
-            return await this.databases.listRows(
+            return await this.databases.listDocuments(
                 config.appwriteDatabaseId,
                 config.appwriteCollectionId,
                 queries
@@ -92,7 +92,6 @@ export class Service {
         }
     }
 
-    //file uplaod services- Uploadfile , deletefile
 
     async uploadFail(file){
         try {
@@ -108,17 +107,14 @@ export class Service {
     }
 
     async deleteFile(fileId){
-        try {
-            return await this.bucket.deleteFile(
-                config.appwriteBucketId,
-                fileId
-            )
-            return true
-        } catch (error) {
-            console.log("Appwrite Service :: uploadFail :: error",error); 
-            return false  
-        }
+    try {
+        await this.bucket.deleteFile(config.appwriteBucketId, fileId)
+        return true
+    } catch (error) {
+        console.log("Appwrite Service :: deleteFile :: error", error);
+        return false
     }
+}
     getfilePreview(fileId){
         return this.bucket.getFilePreview(
             config.appwriteBucketId,
