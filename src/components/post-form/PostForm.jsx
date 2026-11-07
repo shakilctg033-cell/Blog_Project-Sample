@@ -1,27 +1,29 @@
-import React, {useCallback} from "react";
+import React, {useCallback, useEffect} from "react";
 import {useForm} from "react-hook-form";
 import {Button, Input, Select, RTE} from "../index";
 import service from "../../appwrite/configaration";
 import {useNavigate} from "react-router-dom";
 import {useSelector} from "react-redux";
 
-function PostForm({PostForm}) {
+function PostForm({post}) {
   const {register, handleSubmit, watch, setValue, control, getValues} = useForm(
     {
       defaultValues: {
         title: post?.title || "",
-        slug: post?.slug || "",
+        slug: post?.$id || "",
         content: post?.content || "",
         status: post?.status || "active",
       },
     },
   );
   const navigate = useNavigate();
-  const userData = useSelector((state) => state.user.userData);
+  const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
     if (post) {
-      const file = data.image[0] ? service.uploadFail(data.image[0]) : null;
+      const file = data.image?.[0]
+        ? await service.uploadFail(data.image[0])
+        : null;
 
       if (file) {
         service.deleteFile(post.freaturedImg);
@@ -29,49 +31,49 @@ function PostForm({PostForm}) {
 
       const dbPost = await service.updatePost(post.$id, {
         ...data,
-        freaturedImg: file ? file.$id : undefined,
+        freaturedImg: file ? file.$id : post.freaturedImg,
       });
 
       if (dbPost) {
         navigate(`/post/${dbPost.$id}`);
-      } else {
-        const file = await service.uploadFail(data.image[0]);
+      }
+    } else {
+      const file = await service.uploadFail(data.image[0]);
 
-        if (file) {
-          const fileId = file.$id;
-          data.freaturedImg = fileId;
-          const dbPost = await service.createPost({
-            ...data,
-            userId: userData.$id,
-          });
+      if (file) {
+        const dbPost = await service.createPost({
+          ...data,
+          freaturedImg: file.$id,
+          userId: userData.$id,
+        });
 
-          if (dbPost) {
-            navigate(`/post/${dbPost.$id}`);
-          }
+        if (dbPost) {
+          navigate(`/post/${dbPost.$id}`);
         }
       }
     }
   };
 
-  const slugtransform = useCallback((value) => {
+  const slugTransform = useCallback((value) => {
     if (value && typeof value === "string") {
       return value
         .trim()
         .toLowerCase()
-        .replace(/^[a-zA-Z\d\s]+/g, "-")
-        .replace(/\s/g, "-");
-
-      return "";
+        .replace(/[^a-z\d\s]+/g, "")
+        .replace(/\s+/g, "-")
+        .slice(0, 36);
     }
+    return "";
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const subscription = watch((value, {name}) => {
       if (name === "title") {
-        setValue("slug", slugtransform(value.title, {shouldValidate: true}));
+        setValue("slug", slugTransform(value.title), {shouldValidate: true});
       }
     });
-  }, [watch, slugtransform, setValue]);
+    return () => subscription.unsubscribe();
+  }, [watch, slugTransform, setValue]);
 
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
@@ -111,7 +113,7 @@ function PostForm({PostForm}) {
         {post && (
           <div className="w-full mb-4">
             <img
-              src={appwriteService.getFilePreview(post.freaturedImg)}
+              src={service.getFilePreview(post.freaturedImg)}
               alt={post.title}
               className="rounded-lg"
             />

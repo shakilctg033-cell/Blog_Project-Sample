@@ -10,7 +10,7 @@ function EditPost() {
 
   useEffect(() => {
     if (slug) {
-      service.getPosts(slug).then((post) => {
+      service.getPost(slug).then((post) => {
         if (post) {
           setPosts(post);
         }
@@ -23,7 +23,7 @@ function EditPost() {
   return post ? (
     <div className="py-8">
       <Container>
-        <PostForm/>
+        <PostForm post={post}/>     
       </Container>
     </div>
   ) : null

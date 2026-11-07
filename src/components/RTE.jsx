@@ -9,15 +9,15 @@ function RTE({name, control, label, defaultValue= ""}) {
         {label && <label className="inline-block mb-1 pl-1">{label}</label>}
 
         <Controller
-        name={namem || content}
+        name={name || "content"} 
         control={control}
         render={({field: {onChange}}) => (
             <Editor
-          initialValue="default value"
+          initialValue= {defaultValue} 
           init={{
-            branding: false,
+            initialValue: defaultValue,
             height: 500,
-            manubar: true,
+            menubar: true,
             plugins: [
               "image",
               "advlist",
