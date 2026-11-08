@@ -5,34 +5,34 @@ import {useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 
 function Header() {
-const authStatus = useSelector((state) => state.auth.status);
+  const authStatus = useSelector((state) => state.auth.status);
   const navigate = useNavigate();
 
   const navItems = [
     {
       name: "Home",
       slug: "/",
-      active: true,
+      published: true,
     },
     {
       name: "Login",
       slug: "/login",
-      active: !authStatus,
+      published: !authStatus,
     },
     {
       name: "Signup",
       slug: "/signup",
-      active: !authStatus,
+      published: !authStatus,
     },
     {
       name: "All Posts",
       slug: "/all-posts",
-      active: authStatus,
+      published: authStatus,
     },
     {
       name: "Add Post",
       slug: "/add-post",
-      active: authStatus,
+      published: authStatus,
     },
   ];
   return (
@@ -46,7 +46,7 @@ const authStatus = useSelector((state) => state.auth.status);
           </div>
           <ul className="flex ml-auto ">
             {navItems.map((item) =>
-              item.active ? (
+              item.published ? (
                 <li key={item.name}>
                   <button
                     onClick={() => navigate(item.slug)}

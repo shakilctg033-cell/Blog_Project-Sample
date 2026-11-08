@@ -12,7 +12,7 @@ function PostForm({post}) {
         title: post?.title || "",
         slug: post?.$id || "",
         content: post?.content || "",
-        status: post?.status || "active",
+        status: post?.status || "published",
       },
     },
   );
@@ -26,12 +26,12 @@ function PostForm({post}) {
         : null;
 
       if (file) {
-        service.deleteFile(post.freaturedImg);
+        service.deleteFile(post.featuredimage);
       }
 
       const dbPost = await service.updatePost(post.$id, {
         ...data,
-        freaturedImg: file ? file.$id : post.freaturedImg,
+        featuredimage: file ? file.$id : post.featuredimage,
       });
 
       if (dbPost) {
@@ -43,8 +43,8 @@ function PostForm({post}) {
       if (file) {
         const dbPost = await service.createPost({
           ...data,
-          freaturedImg: file.$id,
-          userId: userData.$id,
+          featuredimage: file.$id,
+          userid: userData.$id,
         });
 
         if (dbPost) {
@@ -113,14 +113,14 @@ function PostForm({post}) {
         {post && (
           <div className="w-full mb-4">
             <img
-              src={service.getFilePreview(post.freaturedImg)}
+              src={service.getFilePreview(post.featuredimage)}
               alt={post.title}
               className="rounded-lg"
             />
           </div>
         )}
         <Select
-          options={["active", "inactive"]}
+          options={["published", "draft"]}
           label="Status"
           className="mb-4"
           {...register("status", {required: true})}
