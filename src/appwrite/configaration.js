@@ -28,7 +28,8 @@ export class Service {
         },
       );
     } catch (error) {
-      console.log("Appwrite Service :: getcurrentuser :: error", error);
+      console.log("Appwrite Service :: createPost :: error", error);
+      throw error;
     }
   }
 
@@ -112,8 +113,8 @@ export class Service {
       return false;
     }
   }
-  getfilePreview(fileId) {
-    return this.bucket.getFilePreview(config.appwriteBucketId, fileId);
+  getFilePreview(fileId) {
+    return this.bucket.getFileView(config.appwriteBucketId, fileId);
   }
 }
 

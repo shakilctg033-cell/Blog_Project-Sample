@@ -40,15 +40,25 @@ function PostForm({post}) {
     } else {
       const file = await service.uploadFail(data.image[0]);
 
-      if (file) {
-        const dbPost = await service.createPost({
-          ...data,
-          featuredimage: file.$id,
-          userid: userData.$id,
-        });
+          if (file) {
+        try {
+          const dbPost = await service.createPost({
+            ...data,
+            featuredimage: file.$id,
+            userid: userData.$id,
+          });
 
-        if (dbPost) {
-          navigate(`/post/${dbPost.$id}`);
+          if (dbPost) {
+            navigate(`/post/${dbPost.$id}`);
+          }
+        } catch (error) {
+                   alert(
+            error.message +
+              "\n\nSENT status = " +
+              JSON.stringify(data.status) +
+              "\nlength = " +
+              String(data.status).length,
+          );
         }
       }
     }
